@@ -13,10 +13,5 @@ export default function SetupPage () {
     if (!isOpen) onOpen()
   },[isOpen, onOpen])
 
-  return (
-    <div>
-      <p>Protected route</p>
-      <UserButton afterSignOutUrl='/' />
-    </div>
-  )
+  return null
 }
