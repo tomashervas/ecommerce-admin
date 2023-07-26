@@ -11,6 +11,9 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
+import { toast } from "react-hot-toast"
+import axios from "axios"
+import { useRouter } from "next/navigation"
 
 interface SettingsFormProps {
     initialData: Store
@@ -22,6 +25,7 @@ const formShema = z.object({
 
 const SettingsForm = ({initialData}: SettingsFormProps) => {
 
+    const router = useRouter()
     const [loading, setLoading] = useState(false)
 
     const form = useForm<z.infer<typeof formShema>>({
@@ -30,7 +34,18 @@ const SettingsForm = ({initialData}: SettingsFormProps) => {
     })
 
     const onSubmit = async(values: z.infer<typeof formShema>) => {
-        console.log(values)
+        try {
+            setLoading(true)
+            const response = await axios.patch(`/api/stores/${initialData.id}`, values)
+            console.log(response.data)
+            router.refresh()
+            toast.success('Tienda actualizada')
+        } catch (error) {
+            toast.error('Ha habido un error, por favor inténtelo nuevamente')
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
     }
 
 
@@ -39,7 +54,7 @@ const SettingsForm = ({initialData}: SettingsFormProps) => {
     <div className="p-4">
         <div className="flex justify-between p-4">
             <Heading title={'Ajustes'} description={"Administra la tienda seleccionada"} />
-            <Button variant={"destructive"} size={"icon"}> 
+            <Button disabled={loading} variant={"destructive"} size={"icon"}> 
                 <Trash2 className="h-4 w-4" />
             </Button>
         </div>
