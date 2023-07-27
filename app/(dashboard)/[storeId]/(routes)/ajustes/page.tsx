@@ -19,7 +19,9 @@ const AjustesPage = async ({params}: {params: {storeId: string}}) => {
   if(!store) redirect('/')
 
   return (
-    <SettingsForm initialData={store} />
+    <>
+      <SettingsForm initialData={store} />
+    </>
   )
 }
 export default AjustesPage

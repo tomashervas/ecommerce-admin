@@ -6,7 +6,7 @@ import { Button } from "../ui/button"
 import { Trash2 } from "lucide-react"
 import { Separator } from "../ui/separator"
 import * as z from "zod"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
@@ -15,6 +15,7 @@ import { toast } from "react-hot-toast"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 import AlertModal from "../modals/alertModal"
+import { ApiAlert } from "../ui/apiAlert"
 
 interface SettingsFormProps {
     initialData: Store
@@ -65,6 +66,10 @@ const SettingsForm = ({initialData}: SettingsFormProps) => {
         }
     }
 
+    useEffect(() => {
+      console.log(window.origin)  
+    },[])
+
 
 
   return (
@@ -96,6 +101,8 @@ const SettingsForm = ({initialData}: SettingsFormProps) => {
                 </form>
             </Form>
         </div>
+        <Separator />
+      <ApiAlert title="NEXT_PUBLIC_API_URL" description={`${window.origin}/api/${initialData.id}`} variant="public"/>
     </>
   )
 }
