@@ -70,9 +70,9 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
     const onDelete = async () => {
         try {
             setLoading(true)
-            axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`)
+            await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`)
             router.refresh()
-            router.push("/")
+            router.push(`/${params.storeId}/billboards`)
             toast.success('Tienda eliminada')
         } catch (error) { 
             toast.error("Asegurate que no haya categorías usando este cartel")
