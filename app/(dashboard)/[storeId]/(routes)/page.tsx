@@ -8,7 +8,7 @@ const DashboardPage = async ({params}: {params: {storeId: string}}) => {
   })
   return (
     <div>
-      <p>Dashboard</p>
+      <p>Resumen</p>
       {store && <p>{store.name}</p>}
     </div>
   )
