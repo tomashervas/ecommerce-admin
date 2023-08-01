@@ -1,6 +1,6 @@
 "use client"
 
-import { Billboard, Store } from "@prisma/client"
+import { Billboard, Category } from "@prisma/client"
 import Heading from "@/components/ui/heading"
 import { Button } from "@/components/ui/button"
 import { Trash2 } from "lucide-react"
@@ -16,35 +16,36 @@ import axios from "axios"
 import { useParams, useRouter } from "next/navigation"
 import AlertModal from "@/components/modals/alertModal"
 import { ApiAlert } from "@/components/ui/apiAlert"
-import ImageUpoad from "@/components/ui/imageUpoad"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-interface BillboardFormProps {
-    initialData: Billboard | null
+interface CategoryFormProps {
+    initialData: Category | null
+    billboards: Billboard[]
 }
 
 const formShema = z.object({
-    label: z.string().min(2),
-    imgUrl: z.string().min(2),
+    name: z.string().min(2),
+    billboardId: z.string().min(2),
 })
 
-const BillboardForm = ({ initialData }: BillboardFormProps) => {
+const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
 
     const params = useParams()
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
 
-    const title = initialData ? "Editar cartel" : "Nuevo cartel"
-    const description = initialData ? "Editar el cartel de promoción" : "Añade un nuevo cartel de promoción"
-    const toastMessage = initialData ? "Cartel actualizado" : "Cartel creado"
+    const title = initialData ? "Editar categoría" : "Nueva categoría"
+    const description = initialData ? "Editar categoría" : "Añade una nueva categoría"
+    const toastMessage = initialData ? "categoría actualizada" : "categoría creada"
     const action = initialData ? "Guardar cambios" : "Crear"
 
 
     const form = useForm<z.infer<typeof formShema>>({
         resolver: zodResolver(formShema),
         defaultValues: initialData || {
-            label: "",
-            imgUrl: "",
+            name: "",
+            billboardId: ""
         }
     })
 
@@ -52,12 +53,12 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
         try {
             setLoading(true)
             if(initialData){
-                const response = await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, values)
+                const response = await axios.patch(`/api/${params.storeId}/categories/${params.categoryId}`, values)
             } else {
-                const response = await axios.post(`/api/${params.storeId}/billboards`, values)
+                const response = await axios.post(`/api/${params.storeId}/categories`, values)
             }
             router.refresh()
-            router.push(`/${params.storeId}/billboards`)
+            router.push(`/${params.storeId}/categories`)
             toast.success(toastMessage)
         } catch (error) {
             toast.error('Ha habido un error, por favor inténtelo nuevamente')
@@ -70,12 +71,12 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`)
+            await axios.delete(`/api/${params.storeId}/categories/${params.categoryId}`)
             router.refresh()
-            router.push(`/${params.storeId}/billboards`)
-            toast.success('Tienda eliminada')
+            router.push(`/${params.storeId}/categories`)
+            toast.success('Categoría eliminada')
         } catch (error) { 
-            toast.error("Asegurate que no haya categorías usando este cartel")
+            toast.error("Asegúrate que no haya productos usando esta categoría")
         } finally {
             setLoading(false)
             setIsOpen(false)
@@ -102,26 +103,41 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
                 <Form {...form} >
                     <form onSubmit={form.handleSubmit(onSubmit)} className="mt-4">
 
-                        <FormField name="imgUrl" control={form.control} render={({ field }) => (
-                            <FormItem>
-                                <FormLabel htmlFor="imgUrl">Imagen de fondo</FormLabel>
-                                <FormControl>
-                                    <ImageUpoad value={field.value ? [field.value] : [] }
-                                        disabled={loading} onChange={(url)=>field.onChange(url)} onRemove={()=> field.onChange("") }
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
-
                         <div className="grid grid-cols-3 gap-4 my-4">
-                            <FormField name="label" control={form.control} render={({ field }) => (
+                            <FormField name="name" control={form.control} render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel htmlFor="label">Nombre del cartel</FormLabel>
+                                    <FormLabel htmlFor="name">Nombre de la categoría</FormLabel>
                                     <FormControl>
-                                        <Input disabled={loading} placeholder="Nombre del cartel" {...field} />
+                                        <Input disabled={loading} placeholder="Nombre de la categoría" {...field} />
                                     </FormControl>
                                     <FormMessage />
+                                </FormItem>
+                            )} />
+
+                            <FormField name="billboardId" control={form.control} render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel htmlFor="billboardId">Cartel</FormLabel>
+                                    <Select
+                                        disabled={loading}
+                                        onValueChange={field.onChange}
+                                        value={field.value}
+                                        defaultValue={field.value}
+                                    >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue defaultValue={field.value} placeholder="Selecciona un cartel" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent >
+                                        {billboards.map(billboard => (
+                                            <SelectItem key={billboard.id} value={billboard.id}>
+                                                {billboard.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+
                                 </FormItem>
                             )} />
                         </div>
@@ -133,4 +149,4 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
         </>
     )
 }
-export default BillboardForm
+export default CategoryForm
