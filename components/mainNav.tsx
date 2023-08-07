@@ -13,6 +13,8 @@ const MainNav = ({className, ...props}: React.HtmlHTMLAttributes<HTMLElement> ) 
         {label: 'Resumen', href: `/${params.storeId}`, active: pathName === `/${params.storeId}`},
         {label: 'Carteles', href: `/${params.storeId}/billboards`, active: pathName === `/${params.storeId}/billboards`},
         {label: 'Categorías', href: `/${params.storeId}/categories`, active: pathName === `/${params.storeId}/categories`},
+        {label: 'Tallas', href: `/${params.storeId}/sizes`, active: pathName === `/${params.storeId}/sizes`},
+        {label: 'Colores', href: `/${params.storeId}/colors`, active: pathName === `/${params.storeId}/colors`},
         {label: 'Ajustes', href: `/${params.storeId}/ajustes`, active: pathName === `/${params.storeId}/ajustes`},
     ]
 
