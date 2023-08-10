@@ -3,7 +3,7 @@ import ColorForm from "./components/colorForm"
 import { auth } from "@clerk/nextjs"
 import { redirect } from "next/navigation"
 
-const ColorPage = async ({params}:{ params: { sizeId: string}}) => {
+const ColorPage = async ({params}:{ params: { colorId: string}}) => {
 
     const {userId} = auth()
 
@@ -11,7 +11,7 @@ const ColorPage = async ({params}:{ params: { sizeId: string}}) => {
 
     const color = await prismadb.color.findFirst({
         where: {
-            id: params.sizeId,
+            id: params.colorId,
         },
     })
 

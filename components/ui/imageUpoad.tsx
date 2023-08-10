@@ -37,7 +37,7 @@ const ImageUpoad: React.FC<ImageUploadProps> = ({
     
     return (
         <div>
-            <div>
+            <div className="flex space-x-4 p-4">
                 {value.map((url) => (
                     <div key={url} className="relative w-[200px] h-[200px] rounded-md overflow-hidden">
                         <div className="absolute top-2 right-2 z-10 cursor-pointer">
@@ -45,7 +45,7 @@ const ImageUpoad: React.FC<ImageUploadProps> = ({
                                 <Trash2Icon className="h-4 w-4" />
                             </Button>
                         </div>
-                        <Image  src={url} fill alt="billboard image" className="object-cover"/>
+                        <Image  src={url} fill alt="image" className="object-cover"/>
                     </div>
                 ))}
             </div>
