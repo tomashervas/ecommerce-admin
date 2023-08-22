@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator"
 import { DataTable } from "@/components/ui/dataTable"
 
 interface OrderClientProps {
-  orders: OrderColumn[]
+  orders: OrderColumn[]     
 }
 
 const OrderClient = ({orders}: OrderClientProps) => {
