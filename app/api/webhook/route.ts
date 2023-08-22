@@ -43,23 +43,24 @@ export async function POST(req: Request) {
             phone: session?.customer_details?.phone || ''
           },
           include: {
-            orderItems: true,
+            orderItems: false,
 
           }
         })
         
-        const productIds = order.orderItems.map(item=>item.productId)
+        // const productIds = order.orderItems.map(item=>item.productId)
 
-        await prismadb.product.updateMany({
-          where: {
-            id: {
-              in: [...productIds]
-            }
-          },
-          data: {
-            isArchived: true
-          }
-        })
+        // await prismadb.product.updateMany({
+        //   where: {
+        //     id: {
+        //       in: [...productIds]
+        //     }
+        //   },
+        //   data: {
+            
+        //     isArchived: true
+        //   }
+        // })
     }
 
     return new NextResponse(null,{status: 200})
